@@ -33,7 +33,8 @@ namespace RetailManagerDesktopUI
             //PerRequest - Create a new instance when it is called
             _container
                 .Singleton<IWindowManager, WindowManager>()
-                .Singleton<IEventAggregator, EventAggregator>(); //Raise event and manages it
+                .Singleton<IEventAggregator, EventAggregator>() //Raise event and manages it
+                .Singleton<IAPIHelper, APIHelper>();
 
             GetType().Assembly.GetTypes()
                 .Where(type => type.IsClass)
