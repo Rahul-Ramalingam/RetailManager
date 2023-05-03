@@ -1,10 +1,6 @@
 ﻿using Caliburn.Micro;
 using RetailManagerDesktopUI.Helpers;
-using RetailManagerDesktopUI.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace RetailManagerDesktopUI.ViewModels
@@ -42,6 +38,36 @@ namespace RetailManagerDesktopUI.ViewModels
             }
         }
 
+
+        public bool IsErrorVisible
+        {
+            get 
+            {
+                bool output = false;
+                
+                if(ErrorMessage?.Length > 0)
+                {
+                    output = true;
+                }
+
+                return output;
+            }
+        }
+
+        private string _errorMessage;
+
+        public string ErrorMessage
+        {
+            get { return _errorMessage; }
+            set 
+            {
+                _errorMessage = value; 
+                NotifyOfPropertyChange(() => IsErrorVisible);
+                NotifyOfPropertyChange(() => ErrorMessage);
+            }
+        }
+
+
         public bool CanLogIn
         {
             get
@@ -61,12 +87,12 @@ namespace RetailManagerDesktopUI.ViewModels
         {
             try
             {
-                var result = _apiHelper.AuthenticateAsync(Username, Password);
+                ErrorMessage = "";
+                var result = await _apiHelper.AuthenticateAsync(Username, Password);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                ErrorMessage = ex.Message;
             }
         }
     }
