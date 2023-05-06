@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace RetailManager.Library.Models
+namespace RetailManagerDesktopUI.Library.Model
 {
-    public class UserModel
+    public class LoggedInUserModel : ILoggedInUserModel
     {
         public string Id { get; set; }
+
+        public string Token { get; set; }
 
         public string FirstName { get; set; }
 
