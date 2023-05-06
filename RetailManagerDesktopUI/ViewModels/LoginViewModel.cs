@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using RetailManagerDesktopUI.EventModels;
 using RetailManagerDesktopUI.Helpers;
 using RetailManagerDesktopUI.Library.Api;
 using System;
@@ -11,10 +12,12 @@ namespace RetailManagerDesktopUI.ViewModels
         private string _username;
         private string _password;
         private IAPIHelper _apiHelper;
+        private IEventAggregator _events;
 
-        public LoginViewModel(IAPIHelper apiHelper)
+        public LoginViewModel(IAPIHelper apiHelper, IEventAggregator events)
         {
             _apiHelper = apiHelper;
+            _events = events;
         }
 
         public string Username
@@ -92,6 +95,8 @@ namespace RetailManagerDesktopUI.ViewModels
                 var result = await _apiHelper.AuthenticateAsync(Username, Password);
 
                 await _apiHelper.GetLoggedInUserInfo(result.Access_Token);
+
+                await _events.PublishOnUIThreadAsync(new LogOnEvent());
             }
             catch (Exception ex)
             {
