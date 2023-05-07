@@ -13,19 +13,17 @@ namespace RetailManagerDesktopUI.ViewModels
     {
         private IEventAggregator _events;
         private SalesViewModel _salesVM;
-        private SimpleContainer _container;
 
-        [Obsolete]
-        public ShellViewModel(IEventAggregator events, SalesViewModel salesVM, SimpleContainer container)
+        public ShellViewModel(IEventAggregator events, SalesViewModel salesVM)
         {
             _events = events;
             _salesVM = salesVM;
-            _container = container;
 
             //subscribe to the events published in this way the shell view model always listening to the event that are being published 
             _events.SubscribeOnPublishedThread(this);
 
-            ActivateItemAsync(_container.GetInstance<LoginViewModel>());
+            //Ioc talks to the container to bring in instances
+            ActivateItemAsync(IoC.Get<LoginViewModel>());
         }
 
         //When clicked on login button the login method publishes a logonevent which triggers this function and the sales view model is activated
