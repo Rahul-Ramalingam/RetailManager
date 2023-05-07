@@ -65,8 +65,8 @@ namespace RetailManagerDesktopUI.ViewModels
         public BindingList<CartItemModel> Cart
         {
             get { return _cart; }
-            set 
-            { 
+            set
+            {
                 _cart = value;
                 NotifyOfPropertyChange(() => Cart);
             }
