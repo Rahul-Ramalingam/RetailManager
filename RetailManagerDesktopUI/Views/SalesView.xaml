@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RetailManagerDesktopUI.Views"
              mc:Ignorable="d" Background="White" FontSize="24"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="1000">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -19,16 +19,22 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" MinWidth="265"/>
+            <ColumnDefinition Width="Auto" MinWidth="350"/>
             <ColumnDefinition Width="auto" MinWidth="268"/>
-            <ColumnDefinition Width="auto" MinWidth="265"/>
+            <ColumnDefinition Width="auto" MinWidth="350"/>
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
         <TextBlock Text="Sales Page" FontSize="40" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="0 0 0 20"/>
 
         <TextBlock Text="Items" Grid.Row="1" Grid.Column="0" />
-        <ListBox x:Name="Products" Grid.Row="1" Grid.Column="0" MinHeight="200" MaxWidth="150"/>
+        <ListBox x:Name="Products" Grid.Row="1" Grid.Column="0" MinHeight="200" MaxWidth="200">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding ProductName}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
 
         <StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="1" Margin="20 0">
             <TextBlock Text="Quantity"/>
@@ -39,7 +45,7 @@
 
         <TextBlock Text="Cart" Grid.Row="1" Grid.Column="2"/>
 
-        <ListBox x:Name="Cart" Grid.Row="1" Grid.Column="2" MinHeight="100" MaxWidth="150" />
+        <ListBox x:Name="Cart" Grid.Row="1" Grid.Column="2" MinHeight="100" MaxWidth="200" />
 
         <DockPanel Grid.Row="2" Grid.Column="2" Margin="0 0 10 0">
             <TextBlock Text="SubTotal: " />

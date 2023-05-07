@@ -1,4 +1,6 @@
-﻿using System;
+﻿using RetailManager.Library.DataAccess;
+using RetailManager.Library.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -10,9 +12,11 @@ namespace RetailManager.Controllers
     [Authorize]
     public class ProductController : ApiController
     {
-        public List<string> Get()
+        public List<ProductModel> Get()
         {
-            return new string[] { "value1", "value2", userId };
+            var data = new ProductData();
+
+            return data.GetProducts();
         }
     }
 }

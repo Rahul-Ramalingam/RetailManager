@@ -1,4 +1,6 @@
 ﻿using Caliburn.Micro;
+using RetailManagerDesktopUI.Library.Api;
+using RetailManagerDesktopUI.Library.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,9 +12,28 @@ namespace RetailManagerDesktopUI.ViewModels
 {
     public class SalesViewModel: Screen
     {
-        private BindingList<string> _products;
+        IProductEndpiont _productEndpoint;
 
-        public BindingList<string> Products
+        public SalesViewModel(IProductEndpiont productEndpiont)
+        {
+            _productEndpoint = productEndpiont;
+        }
+
+        protected override async void OnViewLoaded(object view)
+        {
+            base.OnViewLoaded(view);
+            await LoadProducts();
+        }
+
+        private async Task LoadProducts()
+        {
+            var productList = await _productEndpoint.GetAllAsync();
+            Products = new BindingList<ProductModel>(productList);
+        }
+
+        private BindingList<ProductModel> _products;
+
+        public BindingList<ProductModel> Products
         {
             get { return _products; }
             set 

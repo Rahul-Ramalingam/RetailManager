@@ -1,4 +1,5 @@
 ﻿using RetailManagerDesktopUI.Models;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace RetailManagerDesktopUI.Library.Api
@@ -8,5 +9,7 @@ namespace RetailManagerDesktopUI.Library.Api
         Task<AuthenticatedUser> AuthenticateAsync(string username, string password);
 
         Task GetLoggedInUserInfo(string token);
+
+        HttpClient ApiClient { get; }
     }
 }
