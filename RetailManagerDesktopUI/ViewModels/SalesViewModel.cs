@@ -14,12 +14,14 @@ namespace RetailManagerDesktopUI.ViewModels
     public class SalesViewModel: Screen
     {
         IProductEndpiont _productEndpoint;
+        ISaleEndPoint _saleEndPoint;
         IConfigHelper _configHelper;
 
-        public SalesViewModel(IProductEndpiont productEndpiont, IConfigHelper configHelper)
+        public SalesViewModel(IProductEndpiont productEndpiont,ISaleEndPoint saleEndPoint, IConfigHelper configHelper)
         {
             _productEndpoint = productEndpiont;
             _configHelper = configHelper;
+            _saleEndPoint = saleEndPoint;
         }
 
         protected override async void OnViewLoaded(object view)
@@ -179,6 +181,7 @@ namespace RetailManagerDesktopUI.ViewModels
             NotifyOfPropertyChange(() => SubTotal);
             NotifyOfPropertyChange(() => Tax);
             NotifyOfPropertyChange(() => Total);
+            NotifyOfPropertyChange(() => CanCheckOut);
         }
 
         public bool CanRemoveFromcart
@@ -190,19 +193,22 @@ namespace RetailManagerDesktopUI.ViewModels
 
         }
 
-
         public void RemoveFromcart()
         {
             NotifyOfPropertyChange(() => SubTotal);
             NotifyOfPropertyChange(() => Tax);
             NotifyOfPropertyChange(() => Total);
+            NotifyOfPropertyChange(() => CanCheckOut);
         }
 
         public bool CanCheckOut
         {
             get
             {
-
+                if (Cart.Count > 0)
+                {
+                    return true;
+                }
 
 
                 return false;
@@ -211,9 +217,20 @@ namespace RetailManagerDesktopUI.ViewModels
         }
 
 
-        public void CheckOut()
+        public async Task CheckOut()
         {
+            SaleModel sale = new SaleModel();
 
+            foreach(var item in Cart)
+            {
+                sale.SaleDetails.Add(new SaleDetailModel
+                {
+                    ProductId = item.Product.Id,
+                    Quantity = item.QuantityInCart
+                });
+            }
+
+            await _saleEndPoint.PostSale(sale);
         }
     }
 }
