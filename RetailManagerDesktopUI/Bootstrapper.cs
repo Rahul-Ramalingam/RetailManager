@@ -1,8 +1,10 @@
-﻿using Caliburn.Micro;
+﻿using AutoMapper;
+using Caliburn.Micro;
 using RetailManagerDesktopUI.Helpers;
 using RetailManagerDesktopUI.Library.Api;
 using RetailManagerDesktopUI.Library.Helpers;
 using RetailManagerDesktopUI.Library.Model;
+using RetailManagerDesktopUI.Models;
 using RetailManagerDesktopUI.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -27,9 +29,23 @@ namespace RetailManagerDesktopUI
             "PasswordChanged");
         }
 
+        private IMapper ConfigureAutomapper()
+        {
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<ProductModel, ProductDisplayModel>();
+                cfg.CreateMap<CartItemModel, CartItemDisplayModel>();
+            });
+
+            return config.CreateMapper();
+        }
+
+
         //wires up everything
         protected override void Configure()
         {
+            _container.Instance(ConfigureAutomapper());
+
             _container.Instance(_container)
                 .PerRequest<IProductEndpiont, ProductEndpiont>()
                 .PerRequest<ISaleEndPoint, SaleEndPoint>();
