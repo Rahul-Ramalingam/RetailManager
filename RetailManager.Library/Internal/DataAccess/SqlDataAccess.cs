@@ -42,6 +42,8 @@ namespace RetailManager.Library.Internal.DataAccess
         private IDbConnection _connection;
         private IDbTransaction _transaction;
 
+        private bool _isClosed;
+
         public void StartTransaction(string connectionStringName)
         {
             string connectionString = GetConnectionString(connectionStringName);
@@ -50,6 +52,8 @@ namespace RetailManager.Library.Internal.DataAccess
             _connection?.Open();
             
             _transaction = _connection.BeginTransaction();
+
+            _isClosed = false;
         }
 
         public List<T> LoadDataInTransaction<T, U>(string storedProcedure, U parameters)
@@ -70,17 +74,32 @@ namespace RetailManager.Library.Internal.DataAccess
         {
             _transaction?.Commit();
             _connection?.Close();
+
+            _isClosed = true;
         }
 
         public void RollBackTransaction()
         {
             _transaction?.Rollback();
             _connection?.Close();
+
+            _isClosed = true;
         }
 
         public void Dispose()
         {
-            CommitTransaction();
+            if (!_isClosed)
+            {
+                try
+                {
+                    CommitTransaction();
+                }
+                catch 
+                { }
+            }
+
+            _transaction = null;
+            _connection = null;
         }
     }
 }
