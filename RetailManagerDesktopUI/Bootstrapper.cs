@@ -48,7 +48,8 @@ namespace RetailManagerDesktopUI
 
             _container.Instance(_container)
                 .PerRequest<IProductEndpiont, ProductEndpiont>()
-                .PerRequest<ISaleEndPoint, SaleEndPoint>();
+                .PerRequest<ISaleEndPoint, SaleEndPoint>()
+                .PerRequest<IUserEndpoint, UserEndpoint>();
 
             //Singleton - Creates a one time instantiation which is used throughout the lifecycle of the app
             //PerRequest - Create a new instance when it is called
