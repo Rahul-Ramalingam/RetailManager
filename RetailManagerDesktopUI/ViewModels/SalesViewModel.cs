@@ -7,9 +7,11 @@ using RetailManagerDesktopUI.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace RetailManagerDesktopUI.ViewModels
 {
@@ -19,20 +21,47 @@ namespace RetailManagerDesktopUI.ViewModels
         ISaleEndPoint _saleEndPoint;
         IConfigHelper _configHelper;
         IMapper _mapper;
+        private readonly IWindowManager _window;
+        private StatusInfoViewModel _status { get; }
 
         public SalesViewModel(IProductEndpiont productEndpiont,ISaleEndPoint saleEndPoint,
-            IConfigHelper configHelper, IMapper mapper)
+            IConfigHelper configHelper, IMapper mapper, StatusInfoViewModel status, IWindowManager window)
         {
             _productEndpoint = productEndpiont;
             _configHelper = configHelper;
             _saleEndPoint = saleEndPoint;
             _mapper = mapper;
+            _status = status;
+            _window = window;
         }
 
         protected override async void OnViewLoaded(object view)
         {
             base.OnViewLoaded(view);
-            await LoadProducts();
+            try
+            {
+                await LoadProducts();
+            }
+            catch (Exception ex)
+            {
+                dynamic setting = new ExpandoObject();
+                setting.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                setting.ResizeMode = ResizeMode.NoResize;
+                setting.Title = "System Error";
+
+                if (ex.Message == "Unauthorized")
+                {
+                    _status.UpdateMessage("Unauthorized Access", "You do not have permission to view this page.");
+                    await _window.ShowDialogAsync(_status, null, setting);
+                }
+                else
+                {
+                    _status.UpdateMessage("Fatal Exception", ex.Message);
+                    await _window.ShowDialogAsync(_status, null, setting);
+                }
+
+                await TryCloseAsync();
+            }
         }
 
         private async Task LoadProducts()
@@ -248,7 +277,6 @@ namespace RetailManagerDesktopUI.ViewModels
             }
 
         }
-
 
         public async Task CheckOut()
         {
