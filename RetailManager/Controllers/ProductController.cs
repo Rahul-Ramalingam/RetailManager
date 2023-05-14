@@ -9,7 +9,7 @@ using System.Web.Http;
 
 namespace RetailManager.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Cashier")]
     public class ProductController : ApiController
     {
         public List<ProductModel> Get()
